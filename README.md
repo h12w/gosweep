@@ -9,3 +9,6 @@ The script does automatic checking on a Go package and its sub-packages, includi
 4. [go vet](http://golang.org/cmd/vet)
 5. [race detector](http://blog.golang.org/race-detector)
 6. [test coverage](http://blog.golang.org/cover)
+
+Migrated from my [Gist](https://gist.github.com/hailiang/0f22736320abe6be71ce).
+
