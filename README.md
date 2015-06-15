@@ -1,4 +1,4 @@
-GoClean
+GoSweep
 =======
 
 The script does automatic checking on a Go package and its sub-packages, including:
