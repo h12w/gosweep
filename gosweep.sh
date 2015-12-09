@@ -38,6 +38,11 @@ go tool cover -func profile.cov
 # To submit the test coverage result to coveralls.io,
 # use goveralls (https://github.com/mattn/goveralls)
 
-if [ -z "$COVERALLS_TOKEN" ]; then
-    goveralls -coverprofile=profile.cov -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN
+if [ -n "${CI_SERVICE+1}" ]; then
+    echo "goveralls with" $CI_SERVICE
+    if [ -n "${COVERALLS_TOKEN+1}" ]; then
+        goveralls -coverprofile=profile.cov -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN
+    else
+        goveralls -coverprofile=profile.cov -service=$CI_SERVICE
+    fi
 fi
