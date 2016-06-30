@@ -13,27 +13,26 @@ set -e
 test -z "$(gofmt -l -w .     | tee /dev/stderr)"
 test -z "$(goimports -l -w . | tee /dev/stderr)"
 test -z "$(golint .          | tee /dev/stderr)"
-for dir in $(find . -maxdepth 10 -type f -not -path '*/vendor*' -name '*.go' | xargs -I {} dirname {} | sort | uniq);
-do
-go vet $dir
-done
-env GORACE="halt_on_error=1" go test -short -race ./...
+
+DIR_SOURCE="$(find . -maxdepth 10 -type f -not -path '*/vendor*' -name '*.go' | xargs -I {} dirname {} | sort | uniq)"
+
+go vet ${DIR_SOURCE}
+
+GORACE="halt_on_error=1" go test -short -race ${DIR_SOURCE}
 
 # Run test coverage on each subdirectories and merge the coverage profile.
 
 echo "mode: count" > profile.cov
 
 # Standard go tooling behavior is to ignore dirs with leading underscores
-for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -not -path '*/vendor*'  -type d);
+for dir in ${DIR_SOURCE};
 do
-if ls $dir/*.go &> /dev/null; then
     go test -short -covermode=count -coverprofile=$dir/profile.tmp $dir
     if [ -f $dir/profile.tmp ]
     then
         cat $dir/profile.tmp | tail -n +2 >> profile.cov
         rm $dir/profile.tmp
     fi
-fi
 done
 
 go tool cover -func profile.cov
