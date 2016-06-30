@@ -17,14 +17,12 @@ test -z "$(golint .          | tee /dev/stderr)"
 DIR_SOURCE="$(find . -maxdepth 10 -type f -not -path '*/vendor*' -name '*.go' | xargs -I {} dirname {} | sort | uniq)"
 
 go vet ${DIR_SOURCE}
-
-GORACE="halt_on_error=1" go test -short -race ${DIR_SOURCE}
+env GORACE="halt_on_error=1" go test -short -race ${DIR_SOURCE}
 
 # Run test coverage on each subdirectories and merge the coverage profile.
 
 echo "mode: count" > profile.cov
 
-# Standard go tooling behavior is to ignore dirs with leading underscores
 for dir in ${DIR_SOURCE};
 do
     go test -short -covermode=count -coverprofile=$dir/profile.tmp $dir
