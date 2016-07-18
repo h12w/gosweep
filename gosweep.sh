@@ -4,8 +4,9 @@
 # 2. goimports     (https://github.com/bradfitz/goimports)
 # 3. golint        (https://github.com/golang/lint)
 # 4. go vet        (http://golang.org/cmd/vet)
-# 5. race detector (http://blog.golang.org/race-detector)
-# 6. test coverage (http://blog.golang.org/cover)
+# 5. ineffassign   (https://github.com/gordonklaus/ineffassign)
+# 6. race detector (http://blog.golang.org/race-detector)
+# 7. test coverage (http://blog.golang.org/cover)
 
 set -e
 
@@ -13,11 +14,19 @@ set -e
 test -z "$(gofmt -l -w .     | tee /dev/stderr)"
 test -z "$(goimports -l -w . | tee /dev/stderr)"
 test -z "$(golint .          | tee /dev/stderr)"
+test -z "$(ineffassign .     | tee /dev/stderr)"
 
 DIR_SOURCE="$(find . -maxdepth 10 -type f -not -path '*/vendor*' -name '*.go' | xargs -I {} dirname {} | sort | uniq)"
 
 go vet ${DIR_SOURCE}
 env GORACE="halt_on_error=1" go test -short -race ${DIR_SOURCE}
+
+
+for dir in ${DIR_SOURCE};
+do
+    ineffassign $dir
+done
+
 
 # Run test coverage on each subdirectories and merge the coverage profile.
 
