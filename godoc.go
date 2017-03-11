@@ -1,3 +1,3 @@
-package goclean
+package gosweep
 
-// emtpy doc.go file to enable "go get"
+// empty doc.go file to enable "go get"
