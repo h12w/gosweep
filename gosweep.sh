@@ -1,54 +1,77 @@
 #!/bin/bash
+#
 # The script does automatic checking on a Go package and its sub-packages, including:
-# 1. gofmt         (http://golang.org/cmd/gofmt/)
-# 2. goimports     (https://github.com/bradfitz/goimports)
-# 3. golint        (https://github.com/golang/lint)
-# 4. go vet        (http://golang.org/cmd/vet)
-# 5. ineffassign   (https://github.com/gordonklaus/ineffassign)
-# 6. race detector (http://blog.golang.org/race-detector)
-# 7. test coverage (http://blog.golang.org/cover)
+#
+# 1. gofmt
+# 2. goimports
+# 3. golint
+# 4. go vet
+# 5. ineffassign
+# 6. race detector
+# 7. test coverage
+#
 
 set -e
 
-# Automatic checks
-test -z "$(gofmt -l -w .     | tee /dev/stderr)"
-test -z "$(goimports -l -w . | tee /dev/stderr)"
-test -z "$(golint .          | tee /dev/stderr)"
-test -z "$(ineffassign .     | tee /dev/stderr)"
+go build $(go list ./... | grep -v '/vendor/')
 
-DIR_SOURCE="$(find . -maxdepth 10 -type f -not -path '*/vendor*' -name '*.go' | xargs -I {} dirname {} | sort | uniq)"
-
-go vet ${DIR_SOURCE}
-env GORACE="halt_on_error=1" go test -short -race ${DIR_SOURCE}
+echo 'mode: count' > profile.cov
 
 
-for dir in ${DIR_SOURCE};
+for pkg in $(go list ./... | grep -v '/vendor/');
 do
-    ineffassign $dir
-done
+    dir="$GOPATH/src/$pkg"
+    len="${#PWD}"
+    dir_relative=".${dir:$len}"
 
 
-# Run test coverage on each subdirectories and merge the coverage profile.
-
-echo "mode: count" > profile.cov
-
-for dir in ${DIR_SOURCE};
-do
-    go test -short -covermode=count -coverprofile=$dir/profile.tmp $dir
-    if [ -f $dir/profile.tmp ]
+    # 1. test
+    echo "processing package $dir_relative ... (1/8)"
+    go test -v -short -covermode=count -coverprofile="$dir_relative/profile.tmp" "$dir_relative"
+    if [ -f "$dir_relative/profile.tmp" ]
     then
-        cat $dir/profile.tmp | tail -n +2 >> profile.cov
-        rm $dir/profile.tmp
+        cat "$dir_relative/profile.tmp" | tail -n +2 >> profile.cov
+        rm "$dir_relative/profile.tmp"
     fi
+
+    # 2. fmt
+    echo "processing package $dir_relative ... (2/8)"
+    gofmt -l -w "$dir"/*.go
+
+    # 3. imports
+    echo "processing package $dir_relative ... (3/8)"
+    goimports -l -w "$dir"/*.go | tee /dev/stderr
+
+    # 4. lint
+    echo "processing package $dir_relative ... (4/8)"
+    golint $pkg | tee /dev/stderr
+
+    # 5. vet
+    echo "processing package $dir_relative ... (5/8)"
+    go vet $pkg | tee /dev/stderr
+
+    # 6. ineffassign
+    echo "processing package $dir_relative ... (6/8)"
+    ineffassign -n $dir | tee /dev/stderr
+
+    # 7. race conditions
+    echo "processing package $dir_relative ... (7/8)"
+    #env GORACE="halt_on_error=1" go test -short -race $pkg
+
+    echo "processing package $dir_relative ... (8/8)"
+
 done
 
+# test coverage
+echo 'processing code coverage...'
 go tool cover -func profile.cov
+
 
 # To submit the test coverage result to coveralls.io,
 # use goveralls (https://github.com/mattn/goveralls)
 
 if [ -n "${CI_SERVICE+1}" ]; then
-    echo "goveralls with" $CI_SERVICE
+    echo "goveralls with ${CI_SERVICE}"
     if [ -n "${COVERALLS_TOKEN+1}" ]; then
         goveralls -coverprofile=profile.cov -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN
     else
