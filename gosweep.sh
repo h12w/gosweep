@@ -31,7 +31,7 @@ do
 
 
     # 1. test
-    echo "processing package $dir_relative... (1/$max_steps)"
+    echo "go test $pkg ... (1/$max_steps)"
     go test -v -short -covermode=count -coverprofile="$dir_relative/profile.tmp" "$dir_relative"
     if [ -f "$dir_relative/profile.tmp" ]
     then
@@ -40,45 +40,45 @@ do
     fi
 
     # 2. fmt
-    echo "processing package $dir_relative... (2/$max_steps)"
+    echo "gofmt $pkg ... (2/$max_steps)"
     gofmt -l -w "$dir"/*.go
 
     # 3. imports
-    echo "processing package $dir_relative... (3/$max_steps)"
+    echo "goimports $pkg ... (3/$max_steps)"
     goimports -l -w "$dir"/*.go | tee /dev/stderr
 
     # 4. lint
-    echo "processing package $dir_relative... (4/$max_steps)"
+    echo "golint $pkg ... (4/$max_steps)"
     golint $pkg | tee /dev/stderr
 
     # 5. vet
-    echo "processing package $dir_relative... (5/$max_steps)"
+    echo "go vet $pkg ... (5/$max_steps)"
     go vet $pkg | tee /dev/stderr
 
     # 6. ineffassign
-    echo "processing package $dir_relative... (6/$max_steps)"
+    echo "ineffassign $pkg ... (6/$max_steps)"
     ineffassign -n $dir | tee /dev/stderr
 
     # 7. race conditions
-    echo "processing package $dir_relative... (7/$max_steps)"
+    echo "skipped go test race $pkg ... (7/$max_steps)"
     #env GORACE="halt_on_error=1" go test -short -race $pkg
 
 done
 
 # 8. gocyclo
-echo "processing package $dir_relative... (8/$max_steps)"
+echo "gocyclo (8/$max_steps)"
 find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} -P 2 gocyclo -over $complexity {}
 
 # 9. misspell over .go files
-echo "processing package $dir_relative... (9/$max_steps)"
+echo "misspell *.go (9/$max_steps)"
 find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} -P 2 misspell -error -source go {}
 
 # 10. misspell over .txt .md .rst files
-echo "processing text files... (10/$max_steps)"
+echo "misspell text files... (10/$max_steps)"
 find . -type f -not -path './vendor/*' \( -name '*.md' -o -name '*.txt' -o -name '*.rst' \) | xargs -I {} misspell -error -source text {}
 
 # 11. test coverage
-echo "processing code coverage... (11/$max_steps)"
+echo "go tool cover (11/$max_steps)"
 go tool cover -func profile.cov
 
 # 12. goveralls
