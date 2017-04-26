@@ -45,8 +45,7 @@ language: go
 cache:
   directories:
     - ${GOPATH}/src/github.com/${TRAVIS_REPO_SLUG}/vendor
-    - ${GOPATH}/src/github.com/client9/misspell
-    - ${GOPATH}/src/github.com/fzipp/gocyclo
+    - ${GOPATH}/src/github.com/fzipp
     - ${GOPATH}/src/github.com/h12w
     - ${GOPATH}/src/github.com/Masterminds
     - ${GOPATH}/src/github.com/mattn
