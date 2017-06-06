@@ -24,7 +24,6 @@ $ go get -v github.com/client9/misspell/cmd/misspell
 $ go get -v github.com/fzipp/gocyclo
 $ go get -v github.com/h12w/gosweep
 $ go get -v github.com/mattn/goveralls
-$ go get -v github.com/Masterminds/glide
 ```
 
 
