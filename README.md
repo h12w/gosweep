@@ -32,6 +32,15 @@ $ go get -v github.com/mattn/goveralls
 - **GOCYCLO_COMPLEXITY**: maximum allowed function complexity threshold (default: `5`).
 - **MISSPELL_LOCALE**: English locale (default: `US`).
 
+If you wish to set this for a project you can create a `.gosweep` file.
+For example:
+
+```bash
+$ cat .gosweep
+GOCYCLO_COMPLEXITY=5
+MISSPELL_LOCALE='US'
+```
+
 
 ## Continuous Integration
 
