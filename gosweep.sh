@@ -19,6 +19,7 @@ go build $(go list ./... | grep -v '/vendor/')
 
 echo 'mode: count' > profile.cov
 
+if test -s '.gosweep'; then source '.gosweep'; fi
 complexity="${GOCYCLO_COMPLEXITY:-5}"
 locale="${MISSPELL_LOCALE:-US}"
 max_steps=12
