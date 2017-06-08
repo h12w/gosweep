@@ -22,6 +22,7 @@ To setup all the dependencies need to run the script do:
 ```
 $ go get -v github.com/client9/misspell/cmd/misspell
 $ go get -v github.com/fzipp/gocyclo
+$ go get -v -u github.com/gordonklaus/ineffassign
 $ go get -v github.com/h12w/gosweep
 $ go get -v github.com/mattn/goveralls
 ```
@@ -54,6 +55,7 @@ cache:
   directories:
     - ${GOPATH}/src/github.com/${TRAVIS_REPO_SLUG}/vendor
     - ${GOPATH}/src/github.com/fzipp
+    - ${GOPATH}/src/github.com/gordonklaus
     - ${GOPATH}/src/github.com/h12w
     - ${GOPATH}/src/github.com/Masterminds
     - ${GOPATH}/src/github.com/mattn
@@ -70,6 +72,7 @@ env:
 install:
   - go get -v github.com/client9/misspell/cmd/misspell
   - go get -v github.com/fzipp/gocyclo
+  - go get -v github.com/gordonklaus/ineffassign
   - go get -v github.com/h12w/gosweep
   - go get -v github.com/mattn/goveralls
   - go get -v github.com/Masterminds/glide
