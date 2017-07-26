@@ -13,7 +13,7 @@ This script performs the build, test and automatic checking of a Go package and 
 9. [gocyclo][gocyclo]
 10. [misspell][misspell]
 
-Migrated from my [Gist](https://gist.github.com/hailiang/0f22736320abe6be71ce).
+Migrated from my [Gist](https://gist.github.com/h12w/0f22736320abe6be71ce).
 
 
 ## Dependencies
