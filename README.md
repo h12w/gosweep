@@ -13,7 +13,7 @@ This script performs the build, test and automatic checking of a Go package and 
 9. [gocyclo][gocyclo]
 10. [misspell][misspell]
 
-Migrated from my [Gist](https://gist.github.com/hailiang/0f22736320abe6be71ce).
+Migrated from my [Gist](https://gist.github.com/h12w/0f22736320abe6be71ce).
 
 
 ## Dependencies
@@ -22,9 +22,11 @@ To setup all the dependencies need to run the script do:
 ```
 $ go get -v github.com/client9/misspell/cmd/misspell
 $ go get -v github.com/fzipp/gocyclo
-$ go get -v -u github.com/gordonklaus/ineffassign
+$ go get -v github.com/golang/lint/golint
+$ go get -v github.com/gordonklaus/ineffassign
 $ go get -v github.com/h12w/gosweep
 $ go get -v github.com/mattn/goveralls
+$ go get -v golang.org/x/tools/cmd/goimports
 ```
 
 
@@ -55,9 +57,12 @@ cache:
   directories:
     - ${GOPATH}/src/github.com/${TRAVIS_REPO_SLUG}/vendor
     - ${GOPATH}/src/github.com/fzipp
+<<<<<<< HEAD
+=======
+    - ${GOPATH}/src/github.com/golang
+>>>>>>> h12w-master
     - ${GOPATH}/src/github.com/gordonklaus
     - ${GOPATH}/src/github.com/h12w
-    - ${GOPATH}/src/github.com/Masterminds
     - ${GOPATH}/src/github.com/mattn
 go:
   - tip
@@ -72,11 +77,14 @@ env:
 install:
   - go get -v github.com/client9/misspell/cmd/misspell
   - go get -v github.com/fzipp/gocyclo
+<<<<<<< HEAD
+=======
+  - go get -v github.com/golang/lint/golint
+>>>>>>> h12w-master
   - go get -v github.com/gordonklaus/ineffassign
   - go get -v github.com/h12w/gosweep
   - go get -v github.com/mattn/goveralls
-  - go get -v github.com/Masterminds/glide
-  - glide install
+  - go get -v -u golang.org/x/tools/cmd/goimports
 
 script:
   - bash ${GOPATH}/src/github.com/h12w/gosweep/gosweep.sh
