@@ -68,11 +68,11 @@ done
 
 # 8. gocyclo
 echo "gocyclo (8/$max_steps)"
-find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} -P 2 gocyclo -over $complexity {}
+find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} gocyclo -over $complexity {}
 
 # 9. misspell over .go files
 echo "misspell *.go (9/$max_steps)"
-find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} -P 2 misspell -error -source go {}
+find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} misspell -error -source go {}
 
 # 10. misspell over .txt .md .rst files
 echo "misspell text files... (10/$max_steps)"
