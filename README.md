@@ -57,10 +57,7 @@ cache:
   directories:
     - ${GOPATH}/src/github.com/${TRAVIS_REPO_SLUG}/vendor
     - ${GOPATH}/src/github.com/fzipp
-<<<<<<< HEAD
-=======
     - ${GOPATH}/src/github.com/golang
->>>>>>> h12w-master
     - ${GOPATH}/src/github.com/gordonklaus
     - ${GOPATH}/src/github.com/h12w
     - ${GOPATH}/src/github.com/mattn
@@ -77,10 +74,7 @@ env:
 install:
   - go get -v github.com/client9/misspell/cmd/misspell
   - go get -v github.com/fzipp/gocyclo
-<<<<<<< HEAD
-=======
   - go get -v github.com/golang/lint/golint
->>>>>>> h12w-master
   - go get -v github.com/gordonklaus/ineffassign
   - go get -v github.com/h12w/gosweep
   - go get -v github.com/mattn/goveralls
