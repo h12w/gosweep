@@ -76,7 +76,7 @@ find . -type f -name '*.go' -not -path './vendor/*' | xargs -I {} misspell -erro
 
 # 10. misspell over .txt .md .rst files
 echo "misspell text files... (10/$max_steps)"
-find . -type f -not -path './vendor/*' \( -name '*.md' -o -name '*.txt' -o -name '*.rst' \) | xargs -I {} misspell -error -source text {}
+find . -type f -not -path './vendor/*' \( -name '*.go' -o -name '*.md' -o -name '*.txt' -o -name '*.rst' \) | xargs -I {} misspell -error -source text {}
 
 # 11. test coverage
 echo "go tool cover (11/$max_steps)"
