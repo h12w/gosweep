@@ -86,9 +86,9 @@ go tool cover -func profile.cov
 if [ -n "${CI_SERVICE+1}" ]; then
     echo "goveralls with ${CI_SERVICE}"
     if [ -n "${COVERALLS_TOKEN+1}" ]; then
-        goveralls -coverprofile=profile.cov -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN
+        goveralls -coverprofile=profile.cov -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN || echo "Could not send code coverage to coveralls.io! Be sure you registered this repo."
     else
-        goveralls -coverprofile=profile.cov -service=$CI_SERVICE
+        goveralls -coverprofile=profile.cov -service=$CI_SERVICE || echo "Could not send code coverage to coveralls.io! Be sure you registered this repo."
     fi
 fi
 
